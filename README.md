@@ -6,7 +6,8 @@
 
 ### 프로젝트 설정 및 실행 방법
 
-레포지토리를 clone한 뒤 main 브런치에서 `npm start` 명령어를 실행합니다.
+1. main brunch 레포지토리를 clone 해주세요
+2. `cd front` `npm install` `npm start` 명령어를 실행합니다.
 
 ### 과제 요구사항
 전체 요구사항 중 페이지네이션은 미구현되었습니다.
