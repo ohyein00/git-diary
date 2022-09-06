@@ -17,8 +17,7 @@ type RepoBoxContainerProps = {}
 export type BookmarkStorageTypes = string[]
 
 const SearchRepoContainer = (props: RepoBoxContainerProps) => {
-  // TODO : 최종 제출 전 state 비우기
-  const [currentSearchWord, setCurrentSearchWord] = useState('배달')
+  const [currentSearchWord, setCurrentSearchWord] = useState('')
   const [repoItems, setRepoItems] = useState<SearchRepoDto[] | null>(null)
   const [bookmarkList, setBookmarkList] = useState<BookmarkStorageTypes | null>(null)
   const navigate = useNavigate()
