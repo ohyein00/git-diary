@@ -23,4 +23,9 @@ export const RepoBoxContainer = styled.div`
 export const TopWrapper = styled.div`
   display:flex;
   justify-content: left;
+  height:2.2rem;
+  >div:last-child{
+    width:150px;
+    font-weight:bold;
+  }
 `

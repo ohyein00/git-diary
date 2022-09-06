@@ -9,9 +9,6 @@ import {AxiosResponse} from "axios";
 
 
 const SearchPage = () => {
-  /**
-   * searchApi로 레포 정보 가져오기
-   * */
 
   return(
     <S.Container>

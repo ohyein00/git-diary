@@ -6,6 +6,12 @@ export type SearchRepoDto = {
   id:number;
   (key:string):any;
 }
+export type IssuesRepoDto = {
+  html_url: string;
+  title:string;
+  id:number;
+  (key:string):any;
+}
 export type SearchRepoResponse = {
   incomplete_results:boolean;
   total_count:number;

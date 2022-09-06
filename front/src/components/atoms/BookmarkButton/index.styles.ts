@@ -9,6 +9,8 @@ export const BookmarkArea = styled.div`
   
   border:none;
   button{
+    position:relative;
+    z-index: 1;
     background:transparent;
     border:none;
     color:lightcoral;

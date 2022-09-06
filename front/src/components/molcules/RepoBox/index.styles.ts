@@ -22,4 +22,11 @@ export const ContentArea = styled.div`
       padding-right:50px;
     }
   }
+  cursor:pointer;
+  &:hover{
+    text-decoration: underline;
+  }
+`
+export const ContentWrap = styled.div`
+
 `

@@ -8,8 +8,11 @@ import {UseGetBookmark, UseCheckBookmark, UseAddBookmark} from "../../../hooks/U
 import BookmarkList from "../../molcules/BookmarkList";
 import {UseSetLocalStorage} from "../../../hooks/UseLocalStorage";
 import BookmarkButton from "../../atoms/BookmarkButton";
+import {useNavigate} from "react-router-dom";
+import {bookmarkKey} from "../../../constants/localStorageKey";
 
-const bookmarkKey = 'my-bookmark'
+import HashTag from "../../atoms/HashTag";
+
 type RepoBoxContainerProps = {}
 export type BookmarkStorageTypes = string[]
 
@@ -18,6 +21,8 @@ const SearchRepoContainer = (props: RepoBoxContainerProps) => {
   const [currentSearchWord, setCurrentSearchWord] = useState('배달')
   const [repoItems, setRepoItems] = useState<SearchRepoDto[] | null>(null)
   const [bookmarkList, setBookmarkList] = useState<BookmarkStorageTypes | null>(null)
+  const navigate = useNavigate()
+
   /* 검색결과 출력 */
   useEffect(() => {
     (async () => {
@@ -55,22 +60,26 @@ const SearchRepoContainer = (props: RepoBoxContainerProps) => {
     UseSetLocalStorage(bookmarkKey, curBookmark)
     setBookmarkList(curBookmark)
   }, [])
-
-
   return (
     <S.Container>
       <S.TopWrapper>
         <SearchContainer setCurrentSearchWord={setCurrentSearchWord}/>
-        <BookmarkList bookmarkList={bookmarkList}
-                      setBookmarkList={setBookmarkList}
-                      bookmarkKey={bookmarkKey}
-        />
+
+        <HashTag handleNavigate={() => navigate('/bookmark/all')}
+                 name="이슈 모아보기" icon='📃'
+                 bgColor='dark'/>
       </S.TopWrapper>
+      <BookmarkList bookmarkList={bookmarkList}
+                    setBookmarkList={setBookmarkList}
+                    bookmarkKey={bookmarkKey}
+      />
       <S.RepoBoxGroup>
         {repoItems && repoItems.length > 0 ?
           repoItems.map((item) =>
             <S.RepoBoxContainer key={item.id}>
-              <RepoBox title={'레포지토리'} name={item.full_name} content={item.description}>
+              <RepoBox title={'레포지토리'} name={item.full_name}
+                       content={item.description}
+                       handleNavigate={() => navigate(`/bookmark/${item.full_name}`)}>
                 <BookmarkButton handleOnClick={() => handleBookmark(item.full_name)}/>
               </RepoBox>
             </S.RepoBoxContainer>

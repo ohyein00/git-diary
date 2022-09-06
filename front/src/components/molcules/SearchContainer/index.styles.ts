@@ -2,8 +2,7 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   position: relative;
-  width:100%;
-  margin:0px auto;
+  display:inline-block;
 `;
 export const SubmitButton = styled.button`
   display:flex;
@@ -19,8 +18,7 @@ export const SubmitButton = styled.button`
 export const InputArea = styled.div`
   display:flex;
   align-items: center;
-  height:3rem;
-  width:100%;
+  height:2.2rem;
 
   input{
     flex:1;
