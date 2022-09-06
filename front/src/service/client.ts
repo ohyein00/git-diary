@@ -1,8 +1,7 @@
-import axios,{AxiosRequestConfig} from "axios";
-
+import axios, {AxiosRequestConfig} from "axios";
 
 const API = 'https://api.github.com/';
-const token = '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'
+const token = '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'
 
 const Api = axios.create({
   timeout: 10000,
