@@ -1,36 +1,85 @@
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import * as S from './index.styles'
 import {SearchRepoDto} from "../../../types/repoTypes";
-import RepoBox from "../../atoms/RepoBox";
+import RepoBox from "../../molcules/RepoBox";
 import SearchContainer from "../../molcules/SearchContainer";
 import {searchApi} from "../../../service/searchApi";
-import {RepoBoxContainer, RepoBoxGroup} from "./index.styles";
+import {UseGetBookmark, UseCheckBookmark, UseAddBookmark} from "../../../hooks/UseBookmark";
+import BookmarkList from "../../molcules/BookmarkList";
+import {UseSetLocalStorage} from "../../../hooks/UseLocalStorage";
+import BookmarkButton from "../../atoms/BookmarkButton";
 
+const bookmarkKey = 'my-bookmark'
 type RepoBoxContainerProps = {}
+export type BookmarkStorageTypes = string[]
+
 const SearchRepoContainer = (props: RepoBoxContainerProps) => {
-  const [currentSearchWord, setCurrentSearchWord] = useState('')
-  const [repoItems, setRepoItems] = useState<SearchRepoDto[] | undefined>()
+  // TODO : 최종 제출 전 state 비우기
+  const [currentSearchWord, setCurrentSearchWord] = useState('배달')
+  const [repoItems, setRepoItems] = useState<SearchRepoDto[] | null>(null)
+  const [bookmarkList, setBookmarkList] = useState<BookmarkStorageTypes | null>(null)
+  /* 검색결과 출력 */
   useEffect(() => {
     (async () => {
       try {
-        const searchResponse = await searchApi<{ items: SearchRepoDto[] }>({q: currentSearchWord})
-        setRepoItems(searchResponse.items)
+        if (currentSearchWord) {
+          const searchResponse = await searchApi<{ items: SearchRepoDto[] }>({q: currentSearchWord})
+          setRepoItems(searchResponse.items)
+          console.log(searchResponse)
+        }
       } catch (e) {
         console.log(e)
       }
     })()
-    console.log(currentSearchWord)
   }, [currentSearchWord])
+
+  useEffect(() => {
+    const prevBookmark = UseGetBookmark(bookmarkKey)
+    setBookmarkList(prevBookmark)
+  }, [])
+  const handleBookmark = useCallback((item: string) => {
+    const prevBookmark = UseGetBookmark(bookmarkKey)
+    if (prevBookmark.length >= 4) {
+      alert('4개 이상 등록할 수 없습니다')
+      return
+    }
+    if (prevBookmark) {
+      const bookmarkState = UseCheckBookmark(item, prevBookmark)
+      console.log(bookmarkState)
+      if (bookmarkState) {
+        alert('이미 북마크 된 레포지토리입니다.')
+        return
+      }
+    }
+    const curBookmark = UseAddBookmark(bookmarkKey, item)
+    UseSetLocalStorage(bookmarkKey, curBookmark)
+    setBookmarkList(curBookmark)
+  }, [])
+
+
   return (
     <S.Container>
-      <SearchContainer setCurrentSearchWord={setCurrentSearchWord}/>
+      <S.TopWrapper>
+        <SearchContainer setCurrentSearchWord={setCurrentSearchWord}/>
+        <BookmarkList bookmarkList={bookmarkList}
+                      setBookmarkList={setBookmarkList}
+                      bookmarkKey={bookmarkKey}
+        />
+      </S.TopWrapper>
       <S.RepoBoxGroup>
-        {repoItems &&
-          repoItems?.map((item) =>
-            <S.RepoBoxContainer>
-              <RepoBox repoData={item} key={item.id}/>
+        {repoItems && repoItems.length > 0 ?
+          repoItems.map((item) =>
+            <S.RepoBoxContainer key={item.id}>
+              <RepoBox title={'레포지토리'} name={item.full_name} content={item.description}>
+                <BookmarkButton handleOnClick={() => handleBookmark(item.full_name)}/>
+              </RepoBox>
             </S.RepoBoxContainer>
           )
+          : repoItems && repoItems.length === 0 && (
+          <S.RepoBoxContainer>
+            검색 결과가 없습니다
+          </S.RepoBoxContainer>
+        )
         }
       </S.RepoBoxGroup>
     </S.Container>

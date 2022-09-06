@@ -10,14 +10,17 @@ export const Container = styled.div`
 export const RepoBoxGroup = styled.div`
   display:flex;
   flex-wrap: wrap;
-  width:100%;
-  padding:0 20px;
   margin:20px -10px 0;
 `
 
 export const RepoBoxContainer = styled.div`
-    flex-basis: 33.33%;
+    width: 33.33%;
     padding:0 10px;
-    height:150px;
+    height:200px;
     margin-bottom:20px;
+  flex-grow: 0;
+`
+export const TopWrapper = styled.div`
+  display:flex;
+  justify-content: left;
 `

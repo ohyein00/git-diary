@@ -1,5 +1,6 @@
 export type SearchRepoDto = {
-  name: string;
+  full_name: string;
+  name:string;
   url:string;
   description: string;
   id:number;
