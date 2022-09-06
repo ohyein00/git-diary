@@ -1,19 +1,18 @@
 import React, {useCallback} from "react";
-import {RepoBoxData} from "../../../types/repoTypes";
-
+import {SearchRepoDto} from "../../../types/repoTypes";
+import * as S from './index.styles'
 type RepoBoxProps = {
-  repoData : RepoBoxData
+  repoData : SearchRepoDto
 }
 const RepoBox = (props: RepoBoxProps) => {
   const {repoData} = props
-
   return (
     <>
-      <div>
+      <S.Container>
         <p>name:{repoData.name}</p>
         <p>description:{repoData.description}</p>
         <a href={repoData.url}>github link</a>
-      </div>
+      </S.Container>
     </>
   )
 };
