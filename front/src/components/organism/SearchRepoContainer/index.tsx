@@ -44,7 +44,7 @@ const SearchRepoContainer = (props: RepoBoxContainerProps) => {
   }, [])
   const handleBookmark = useCallback((item: string) => {
     const prevBookmark = UseGetBookmark(bookmarkKey)
-    if (prevBookmark.length >= 4) {
+    if (prevBookmark && prevBookmark.length >= 4) {
       alert('4개 이상 등록할 수 없습니다')
       return
     }

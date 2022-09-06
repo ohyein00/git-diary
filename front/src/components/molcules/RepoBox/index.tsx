@@ -26,4 +26,4 @@ const RepoBox = (props: RepoBoxProps) => {
   )
 };
 
-export default React.memo(RepoBox);
+export default RepoBox;

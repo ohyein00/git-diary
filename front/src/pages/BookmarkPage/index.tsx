@@ -3,30 +3,19 @@ import * as S from './index.styles'
 import {useParams} from "react-router-dom";
 import {getRepoIssueApi} from "../../service/repoApi";
 import RepoBox from "../../components/molcules/RepoBox";
-import BookmarkButton from "../../components/atoms/BookmarkButton";
 import {IssuesRepoDto} from "../../types/repoTypes";
 import {UseGetBookmark} from "../../hooks/UseBookmark";
+import {bookmarkKey} from "../../constants/localStorageKey";
+import RepoIssueList from "../../components/organism/RepoIssueList";
 
+type RepoIssuesType = {
+  name: string;
+  issues: IssuesRepoDto[]
+}
 const BookmarkPage = () => {
   const {id, repoName} = useParams();
-  const [repoIssues, setRepoIssues] = useState<IssuesRepoDto[]>()
-  // repository name이 넘어올 경우 패칭
-  useEffect(() => {
-      (async () => {
-        try {
-          let data
-          if (id || repoName) {
-            data = await getRepoIssueApi<IssuesRepoDto[]>(`${id}/${repoName}`)
-          }else{
-            const bookmarkList = UseGetBookmark('my')
-          }
-          setRepoIssues(data)
+  const bookmarkList = UseGetBookmark(bookmarkKey)
 
-        } catch (e) {
-          console.log(e)
-        }
-      })()
-  }, [id, repoName])
   return (
     <S.Container>
       <S.Title>
@@ -34,18 +23,14 @@ const BookmarkPage = () => {
           `${id}의 ${repoName} 이슈`
           : `이슈 모아보기`
         }
-        </S.Title>
-      {repoIssues && repoIssues.length > 0 ?
-        repoIssues.map((item) =>
-          <S.RepoIssuesBoxContainer key={item.id}>
-            <a href={item.html_url}>
-              <RepoBox title={'이슈 내용'} content={item.title}/>
-            </a>
-          </S.RepoIssuesBoxContainer>
+      </S.Title>
+      {repoName ? <RepoIssueList repoName={`${id}/${repoName}`}/> :
+        bookmarkList.length > 0 ? (
+          bookmarkList.map((repoName) => (
+            <RepoIssueList repoName={repoName}/>
+          ))
         )
-        : repoIssues && repoIssues.length === 0 && (
-        '생성된 이슈가 없습니다.'
-      )
+        : '북마크가 없습니다.'
       }
     </S.Container>
   )
