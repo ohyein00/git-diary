@@ -6,7 +6,10 @@
 
 ### 프로젝트 설정 및 실행 방법
 
-레포지토리를 clone한 뒤 main 브런치에서 `npm start` 명령어를 실행합니다.
+1. main brunch 레포지토리를 clone 해주세요.
+2. `cd front` `npm install` `npm start` 명령어를 실행합니다.
+3. github token 인증 문제로 github api요청이 `401` 이 뜬다면 
+임시로 `src/service/client.ts` 파일에서 `Authorization`에 해당하는 부분을 삭제 후 확인 부탁드립니다.
 
 ### 과제 요구사항
 전체 요구사항 중 페이지네이션은 미구현되었습니다.
