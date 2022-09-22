@@ -12,14 +12,17 @@ import {useNavigate} from "react-router-dom";
 import {bookmarkKey} from "../../../constants/localStorageKey";
 
 import HashTag from "../../atoms/HashTag";
+import {UsePageDivide} from "../../../hooks/UsePageDivide";
 
 type RepoBoxContainerProps = {}
 export type BookmarkStorageTypes = string[]
 
+
 const SearchRepoContainer = (props: RepoBoxContainerProps) => {
   const [currentSearchWord, setCurrentSearchWord] = useState('')
-  const [repoItems, setRepoItems] = useState<SearchRepoDto[] | null>(null)
+  const [repoItems, setRepoItems] = useState<SearchRepoDto[][] | null>(null)
   const [bookmarkList, setBookmarkList] = useState<BookmarkStorageTypes | null>(null)
+  const [curPage,setCurPage] = useState(0)
   const navigate = useNavigate()
 
   /* 검색결과 출력 */
@@ -28,8 +31,9 @@ const SearchRepoContainer = (props: RepoBoxContainerProps) => {
       try {
         if (currentSearchWord) {
           const searchResponse = await searchApi<{ items: SearchRepoDto[] }>({q: currentSearchWord})
-          setRepoItems(searchResponse.items)
-          console.log(searchResponse)
+          const divideItems = UsePageDivide<SearchRepoDto>(searchResponse.items,10)
+          console.log(divideItems)
+          setRepoItems(divideItems)
         }
       } catch (e) {
         console.log(e)
@@ -59,6 +63,9 @@ const SearchRepoContainer = (props: RepoBoxContainerProps) => {
     UseSetLocalStorage(bookmarkKey, curBookmark)
     setBookmarkList(curBookmark)
   }, [])
+  const paginationOnclick = useCallback((num:number)=>{
+    setCurPage(num)
+  },[])
   return (
     <S.Container>
       <S.TopWrapper>
@@ -73,8 +80,9 @@ const SearchRepoContainer = (props: RepoBoxContainerProps) => {
                     bookmarkKey={bookmarkKey}
       />
       <S.RepoBoxGroup>
+        <>
         {repoItems && repoItems.length > 0 ?
-          repoItems.map((item) =>
+          repoItems[curPage].map((item) =>
             <S.RepoBoxContainer key={item.id}>
               <RepoBox title={'레포지토리'} name={item.full_name}
                        content={item.description}
@@ -89,7 +97,15 @@ const SearchRepoContainer = (props: RepoBoxContainerProps) => {
           </S.RepoBoxContainer>
         )
         }
+
+        </>
       </S.RepoBoxGroup>
+      <>
+        {
+          repoItems?.map((_,index)=>{
+            return <button onClick={()=>paginationOnclick(index)}>{index + 1}</button>
+          })
+        }</>
     </S.Container>
   )
 };

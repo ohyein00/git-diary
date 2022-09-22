@@ -7,7 +7,6 @@ const Api = axios.create({
   timeout: 10000,
   headers: {
     Accept: 'application/vnd.github.v3+json',
-    Authorization: `token ${token}`
   },
   baseURL: API
 });
@@ -17,6 +16,7 @@ export const request = async <T>(config: AxiosRequestConfig): Promise<T> => {
     const { data } = await Api(config);
     return data;
   } catch (err: any) {
+    console.log(err)
     throw new Error(err);
   }
 };
